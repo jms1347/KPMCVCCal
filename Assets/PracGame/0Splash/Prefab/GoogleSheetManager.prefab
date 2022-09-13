@@ -45,4 +45,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitterPlayerSo: {fileID: 11400000, guid: 22d965e5002081940a0ff8be16fe7bd6, type: 2}
   pitcherPlayerSo: {fileID: 11400000, guid: de8f908fd6172c74d88874330ff2b028, type: 2}
-  testIndex: 0
+  clanTeamPlayerSo: {fileID: 11400000, guid: d888008f147d1da48b1cd6c1787b3dc0, type: 2}

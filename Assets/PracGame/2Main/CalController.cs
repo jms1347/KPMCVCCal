@@ -17,8 +17,8 @@ public class CalController : MonoBehaviour
         
         public InputField yearInput;
         public InputField addNumberInput;
+        public InputField levelInput;
 
-        public Dropdown levelInput;
     }
     public List<HitterBox> hitterBoxList = new List<HitterBox>();
     public List<HitterPlayerDB> hitterPlayers = new List<HitterPlayerDB>();
@@ -38,6 +38,10 @@ public class CalController : MonoBehaviour
 
     public int sumSpeed = 0;
     public int sumDefence = 0;
+    public int sumAwakening = 0;
+    public int sumLeftHitterCnt = 0;
+    public int sumRightHitterCnt = 0;
+    public int sumDoubleHitterCnt = 0;
 
     [Header("결과 팝업")]
     public GameObject resultPop;
@@ -59,7 +63,10 @@ public class CalController : MonoBehaviour
 
         sumSpeed = 0;
          sumDefence = 0;
-
+        sumAwakening = 0;
+        sumLeftHitterCnt = 0;
+       sumRightHitterCnt = 0;
+        sumDoubleHitterCnt = 0;
         hitterPlayers.Clear();
 
         for (int i = 0; i < resultText.Length; i++)
@@ -137,8 +144,22 @@ public class CalController : MonoBehaviour
                     }
                 }
 
-                //등급 더하기
-                if(hitterPlayers[i].grade == "라이징")
+                //좌우타 계산
+                if(hitterPlayers[i].hand == HitterPlayerDB.Hand.leftHand)
+                {
+                    sumLeftHitterCnt += 1;
+                }
+                else if (hitterPlayers[i].hand == HitterPlayerDB.Hand.rightHand)
+                {
+                    sumRightHitterCnt += 1;
+                }
+                else
+                {
+                    sumDoubleHitterCnt += 1;
+                }
+
+                    //등급 더하기
+                    if (hitterPlayers[i].grade == "라이징")
                 {
                     sumLeftHit += 55;
                     sumRightHit += 55;
@@ -161,38 +182,20 @@ public class CalController : MonoBehaviour
                     SumPlus(15);
                 }
 
-
-                //임시 레벨적용
-                if(hitterBoxList[i].teamInput.captionText.text == "노각성(25)")
+                if (hitterPlayers[i].grade != "라이징")
                 {
-                    sumLeftHit += 25;
-                    sumRightHit += 25;
-                    sumUnderHit += 25;
+                    int plusValue = int.Parse(hitterBoxList[i].levelInput.text);
+                    sumLeftHit += plusValue;
+                    sumRightHit += plusValue;
+                    sumUnderHit += plusValue;
+                    //임시 레벨적용
+                    if (plusValue>=30)
+                    {
+                        sumAwakening += 1;
+                        SumPlus(1);
+                    }                    
                 }
-                else if(hitterBoxList[i].teamInput.captionText.text == "각성(30)")
-                {
-                    sumLeftHit += 30;
-                    sumRightHit += 30;
-                    sumUnderHit += 30;
-                    SumPlus(1);
-
-                }
-                else if(hitterBoxList[i].teamInput.captionText.text == "노풀각성(35)")
-                {
-                    sumLeftHit += 35;
-                    sumRightHit += 35;
-                    sumUnderHit += 35; 
-                    SumPlus(1);
-
-                }
-                else
-                {
-                    sumLeftHit += 40;
-                    sumRightHit += 40;
-                    sumUnderHit += 40;
-                    SumPlus(1);
-
-                }
+                    
 
                 //추가능력치 계산
                 SumPlus(int.Parse(hitterBoxList[i].addNumberInput.text));
@@ -213,17 +216,21 @@ public class CalController : MonoBehaviour
     }
     public void Result()
     {
-        resultText[0].text = "좌타격 : "+sumLeftHit +"(평균 : "+sumLeftHit/9+")";
-        resultText[1].text = "우타격 : "+ sumRightHit + "(평균 : " + sumRightHit / 9 + ")"; ;
-        resultText[2].text = "언더타격 : "+ sumUnderHit + "(평균 : " + sumUnderHit / 9 + ")"; ; ;
-        resultText[3].text = "좌장타 : " + sumLeftLongHit + "(평균 : " + sumLeftLongHit / 9 + ")"; ; ;
-        resultText[4].text = "우장타 : " + sumRightLongHit + "(평균 : " + sumRightLongHit / 9 + ")"; ; ;
-        resultText[5].text = "언더장타 : " + sumUnderLongHit + "(평균 : " + sumUnderLongHit / 9 + ")"; ; ;
-        resultText[6].text = "좌선구 : " + sumLeftSungu + "(평균 : " + sumLeftSungu / 9 + ")"; ; ;
-        resultText[7].text = "우선구 : " + sumRightSungu + "(평균 : " + sumRightSungu / 9 + ")"; ; ;
-        resultText[8].text = "언더선구 : " + sumUnderSungu + "(평균 : " + sumUnderSungu / 9 + ")"; ; ;
-        resultText[9].text = "주루 : " + sumSpeed + "(평균 : " + sumSpeed / 9 + ")"; ; ;
-        resultText[10].text = "수비 : " + sumDefence + "(평균 : " + sumDefence / 9 + ")"; ; ;
+        resultText[0].text = "좌타격 : "+sumLeftHit +"\n(평균 : "+sumLeftHit/9+")";
+        resultText[1].text = "우타격 : "+ sumRightHit + "\n(평균 : " + sumRightHit / 9 + ")"; 
+        resultText[2].text = "언더타격 : "+ sumUnderHit + "\n(평균 : " + sumUnderHit / 9 + ")"; 
+        resultText[3].text = "좌장타 : " + sumLeftLongHit + "\n(평균 : " + sumLeftLongHit / 9 + ")";
+        resultText[4].text = "우장타 : " + sumRightLongHit + "\n(평균 : " + sumRightLongHit / 9 + ")"; 
+        resultText[5].text = "언더장타 : " + sumUnderLongHit + "\n(평균 : " + sumUnderLongHit / 9 + ")";
+        resultText[6].text = "좌선구 : " + sumLeftSungu + "\n(평균 : " + sumLeftSungu / 9 + ")"; 
+        resultText[7].text = "우선구 : " + sumRightSungu + "\n(평균 : " + sumRightSungu / 9 + ")"; 
+        resultText[8].text = "언더선구 : " + sumUnderSungu + "\n(평균 : " + sumUnderSungu / 9 + ")"; 
+        resultText[9].text = "주루 : " + sumSpeed + "\n(평균 : " + sumSpeed / 9 + ")"; 
+        resultText[10].text = "수비 : " + sumDefence + "\n(평균 : " + sumDefence / 9 + ")";
+        resultText[11].text = "각성수 : " + sumAwakening;
+        resultText[12].text = "좌타자수 : " + sumLeftHitterCnt;
+        resultText[13].text = "양타자수 : " + sumDoubleHitterCnt;
+        resultText[14].text = "우타자수 : " + sumRightHitterCnt;
         resultPop.gameObject.SetActive(true);
 
     }
@@ -240,5 +247,47 @@ public class CalController : MonoBehaviour
         sumUnderSungu += plusValue;
         sumSpeed += plusValue;
         sumDefence += plusValue;
+    }
+
+    public void SetAllBtn(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                //팀
+                for (int i = 0; i < hitterBoxList.Count; i++)
+                {
+                    hitterBoxList[i].teamInput.value = hitterBoxList[0].teamInput.value;
+                }
+                break;
+            case 1:
+                //등급
+                for (int i = 0; i < hitterBoxList.Count; i++)
+                {
+                    hitterBoxList[i].gradeInput.value = hitterBoxList[0].gradeInput.value;
+                }
+                break;
+            case 2:
+                //연도
+                for (int i = 0; i < hitterBoxList.Count; i++)
+                {
+                    hitterBoxList[i].yearInput.text = hitterBoxList[0].yearInput.text;
+                }
+                break;
+            case 3:
+                //추가오버롤
+                for (int i = 0; i < hitterBoxList.Count; i++)
+                {
+                    hitterBoxList[i].addNumberInput.text = hitterBoxList[0].addNumberInput.text;
+                }
+                break;
+            case 4:
+                //각성여부
+                for (int i = 0; i < hitterBoxList.Count; i++)
+                {
+                    hitterBoxList[i].levelInput.text = hitterBoxList[0].levelInput.text;
+                }
+                break;
+        }
     }
 }

@@ -25,6 +25,8 @@ public class HitterPlayerDB
     public int sungu_under;
     public int speed;
     public int defence;
+    public int level = 0;
+    public int addpoint = 0;
     public enum Position
     {
         posu = 0,
