@@ -15,3 +15,4 @@ public class TranslationSo : ScriptableObject
 {
     public List<TranslationDB> translationDataList = new List<TranslationDB>();
 }
+                                                                                                                                                                                                                            

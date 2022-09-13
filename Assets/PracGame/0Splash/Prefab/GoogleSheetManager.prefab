@@ -43,6 +43,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 353e38b01b8ed5a42a69b9060e9ec5ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  versionSO: {fileID: 11400000, guid: 3c630485f3c48fa4f84ae3dc1207baf8, type: 2}
-  translationSO: {fileID: 11400000, guid: c9b3e31cebb80ad4f99e55bac8fbefa5, type: 2}
+  hitterPlayerSo: {fileID: 11400000, guid: 22d965e5002081940a0ff8be16fe7bd6, type: 2}
+  pitcherPlayerSo: {fileID: 11400000, guid: de8f908fd6172c74d88874330ff2b028, type: 2}
   testIndex: 0
