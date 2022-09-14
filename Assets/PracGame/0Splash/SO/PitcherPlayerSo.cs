@@ -25,7 +25,7 @@ public class PitcherPlayerDB
     public int health;
     public int level = 0;
     public int addpoint = 0;
-    public int contribution = 0;
+    public int positionCode = 0;
     public enum Position
     {
         first = 0,

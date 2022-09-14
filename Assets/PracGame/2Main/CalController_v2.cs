@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Threading.Tasks;
+using System.Linq;
 
 public class CalController_v2 : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class CalController_v2 : MonoBehaviour
     [Header("인풋ID데이터")]
     public TMP_InputField redTeamIDInput;
     public TMP_InputField blueTeamIDInput;
+    public TMP_InputField[] pitcherCodeInput = new TMP_InputField[2];
     [System.Serializable]
     public class Team
     {
@@ -93,24 +95,24 @@ public class CalController_v2 : MonoBehaviour
             dataTexts[6].text = sumLeftSungu.ToString() + "(평균 : " + sumLeftSungu / 9 + ")";
             dataTexts[7].text = sumRightSungu.ToString() + "(평균 : " + sumRightSungu / 9 + ")";
             dataTexts[8].text = sumUnderSungu.ToString() + "(평균 : " + sumUnderSungu / 9 + ")";
-            dataTexts[9].text = sumSpeed.ToString() + "(평균 : " + sumSpeed / 9 + ")";
-            dataTexts[10].text = sumDefence.ToString() + "(평균 : " + sumDefence / 9 + ")";
+            //dataTexts[9].text = sumSpeed.ToString() + "(평균 : " + sumSpeed / 9 + ")";
+            //dataTexts[10].text = sumDefence.ToString() + "(평균 : " + sumDefence / 9 + ")";
             dataTexts[11].text = sumAwakeningHitter.ToString();
             dataTexts[12].text = sumLeftHitterCnt.ToString();
             dataTexts[13].text = sumRightHitterCnt.ToString();
             dataTexts[14].text = sumDoubleHitterCnt.ToString();
-            dataTexts[15].text = catcherDefense.ToString();
+            //dataTexts[15].text = catcherDefense.ToString();
 
             //투수합
-            dataTexts[18].text = (sumLeftChangeball/100).ToString();
-            dataTexts[19].text = (sumRightChangeball / 100).ToString();
-            dataTexts[20].text = (sumLeftNinth / 100).ToString();
-            dataTexts[21].text = (sumRightNinth / 100).ToString();
-            dataTexts[22].text = (sumLeftPowerball / 100).ToString();
-            dataTexts[23].text = (sumRightPowerball / 100).ToString();
-            dataTexts[24].text = (sumMental / 100).ToString();
-            dataTexts[25].text = (sumHealth / 100).ToString();
-            dataTexts[26].text = sumAwakeningPitcher.ToString();
+            dataTexts[18].text = (sumLeftChangeball).ToString();
+            dataTexts[19].text = (sumRightChangeball).ToString();
+            dataTexts[20].text = (sumLeftNinth ).ToString();
+            dataTexts[21].text = (sumRightNinth ).ToString();
+            dataTexts[22].text = (sumLeftPowerball ).ToString();
+            dataTexts[23].text = (sumRightPowerball ).ToString();
+            //dataTexts[24].text = (sumMental / 100).ToString();
+            //dataTexts[25].text = (sumHealth / 100).ToString();
+            //dataTexts[26].text = sumAwakeningPitcher.ToString();
         }
 
         public void Init()
@@ -160,6 +162,9 @@ public class CalController_v2 : MonoBehaviour
     }
     public void SettingData(string pId, int pIndex)
     {
+        //초기화
+        teams[pIndex].Init();
+
         List<PlayerData> tempData = new List<PlayerData>();
         tempData = clanPlayerDB.GetGroupIDData(pId);
         bool isError = false;
@@ -176,43 +181,9 @@ public class CalController_v2 : MonoBehaviour
 
                 if(tempHitter == null)
                 {
-                    if (tempData[i].grade == "시즌" || tempData[i].grade == "라이브")
-                    {
-                        tempHitter = new HitterPlayerDB();
-                        tempHitter.index = i;
-                        tempHitter.hit_right = tempData[i].aPoint_1;
-                        tempHitter.hit_left = tempData[i].bPoint_1;
-                        tempHitter.hit_under = tempData[i].cPoint_1;
-                        tempHitter.longHit_right = tempData[i].aPoint_2;
-                        tempHitter.longHit_left = tempData[i].bPoint_2;
-                        tempHitter.longHit_under = tempData[i].cPoint_2;
-                        tempHitter.sungu_left = tempData[i].cPoint_seongu;
-                        tempHitter.sungu_right= tempData[i].cPoint_seongu;
-                        tempHitter.sungu_under = tempData[i].cPoint_seongu;
-                        tempHitter.speed = tempData[i].dPoint;
-                        tempHitter.defence = tempData[i].ePoint;
-                        tempHitter.addpoint = tempData[i].addPoint;
-                        if(tempData[i].handType == "우")
-                        {
-                            tempHitter.hand = HitterPlayerDB.Hand.rightHand;
- 
-                        }else if(tempData[i].handType == "좌")
-                        {
-                            tempHitter.hand = HitterPlayerDB.Hand.leftHand;
-                        }
-                        else
-                        {
-                            tempHitter.hand = HitterPlayerDB.Hand.doubleHand;
-                        }
-                        tempHitter.preferredBattingOrder = (HitterPlayerDB.PreferredBattingOrder)tempData[i].preferredBattingOrder;
-                        tempHitter.preferredBattingOrder_Detail = tempData[i].preferredBattingOrder_Detail;
-                    }
-                    else
-                    {
-                        isError = true;
-                        teams[pIndex].ErrorMessageOutPut((i + 1) + "번 타자 입력 오류");
-                        break;
-                    }
+                    isError = true;
+                    teams[pIndex].ErrorMessageOutPut((i + 1) + "번 타자 입력 오류");
+                    break;
                 }
                 else
                 {
@@ -231,50 +202,15 @@ public class CalController_v2 : MonoBehaviour
 
                 if (tempPitcher == null)
                 {
-                    if(tempData[i].grade == "시즌"|| tempData[i].grade == "라이브")
-                    {
-                        tempPitcher = new PitcherPlayerDB();
-                        tempPitcher.index = i;
-                        tempPitcher.changeball_right = tempData[i].aPoint_1;
-                        tempPitcher.ninth_right = tempData[i].bPoint_1;
-                        tempPitcher.powerball_right = tempData[i].cPoint_1;
-                        tempPitcher.changeball_left = tempData[i].aPoint_2;
-                        tempPitcher.ninth_left = tempData[i].bPoint_2;
-                        tempPitcher.powerball_left = tempData[i].cPoint_2;
-                        tempPitcher.mental = tempData[i].dPoint;
-                        tempPitcher.health = tempData[i].ePoint;
-                        tempPitcher.addpoint = tempData[i].addPoint;
-                        if (tempData[i].handType == "우")
-                        {
-                            tempPitcher.hand = PitcherPlayerDB.Hand.rightHand;
-
-                        }
-                        else if (tempData[i].handType == "좌")
-                        {
-                            tempPitcher.hand = PitcherPlayerDB.Hand.leftHand;
-                        }
-                        else if(tempData[i].handType == "우사")
-                        {
-                            tempPitcher.hand = PitcherPlayerDB.Hand.rightSideHand;
-                        }
-                        else
-                        {
-                            tempPitcher.hand = PitcherPlayerDB.Hand.leftSideHand;
-
-                        }
-                    }
-                    else{
-                        isError = true;
-                        teams[pIndex].ErrorMessageOutPut((i + 1) + "번 투수 입력 오류");
-                        break;
-                    }
-
+                    isError = true;
+                    teams[pIndex].ErrorMessageOutPut((i + 1) + "번 투수 입력 오류");
+                    break;
                 }
                 else
                 {
                     tempPitcher.level = tempData[i].level;
                     tempPitcher.addpoint = tempData[i].addPoint;
-                    tempPitcher.contribution = tempData[i].positionCode;
+                    tempPitcher.positionCode = tempData[i].positionCode;
                     teams[pIndex].pitcherPlayers.Add(tempPitcher);
                 }
             }
@@ -299,31 +235,21 @@ public class CalController_v2 : MonoBehaviour
                 teams[pIndex].sumDefence += teams[pIndex].hitterPlayers[i].defence;
 
                 //포수 수비 세팅
-                if (teams[pIndex].hitterPlayers[i].position == HitterPlayerDB.Position.posu)
-                    teams[pIndex].catcherDefense = teams[pIndex].hitterPlayers[i].defence;
+                //if (teams[pIndex].hitterPlayers[i].position == HitterPlayerDB.Position.posu)
+                //    teams[pIndex].catcherDefense = teams[pIndex].hitterPlayers[i].defence;
 
                 //포지션 별 추가 능력치 계싼
                 if (i < 2 && (teams[pIndex].hitterPlayers[i].preferredBattingOrder == HitterPlayerDB.PreferredBattingOrder.top || teams[pIndex].hitterPlayers[i].preferredBattingOrder == HitterPlayerDB.PreferredBattingOrder.balance))
                 {
                     teams[pIndex].SumHitterPlus(1);
-                    //포수 수비계산
-                    if (teams[pIndex].hitterPlayers[i].position == HitterPlayerDB.Position.posu)
-                        teams[pIndex].catcherDefense += 1;
-
                 }
                 else if ((i > 1 && i < 5) && (teams[pIndex].hitterPlayers[i].preferredBattingOrder == HitterPlayerDB.PreferredBattingOrder.cleanup || teams[pIndex].hitterPlayers[i].preferredBattingOrder == HitterPlayerDB.PreferredBattingOrder.balance))
                 {
                     teams[pIndex].SumHitterPlus(1);
-                    //포수 수비계산
-                    if (teams[pIndex].hitterPlayers[i].position == HitterPlayerDB.Position.posu)
-                        teams[pIndex].catcherDefense += 1;
                 }
                 else if ((i > 4 && i < 9) && (teams[pIndex].hitterPlayers[i].preferredBattingOrder == HitterPlayerDB.PreferredBattingOrder.down || teams[pIndex].hitterPlayers[i].preferredBattingOrder == HitterPlayerDB.PreferredBattingOrder.balance))
                 {
                     teams[pIndex].SumHitterPlus(1);
-                    //포수 수비계산
-                    if (teams[pIndex].hitterPlayers[i].position == HitterPlayerDB.Position.posu)
-                        teams[pIndex].catcherDefense += 1;
                 }
 
                 string[] split_temp_text = teams[pIndex].hitterPlayers[i].preferredBattingOrder_Detail.Split('/');
@@ -335,9 +261,6 @@ public class CalController_v2 : MonoBehaviour
                     if (temp == i.ToString())
                     {
                         teams[pIndex].SumHitterPlus(2);
-                        //포수 수비계산
-                        if (teams[pIndex].hitterPlayers[i].position == HitterPlayerDB.Position.posu)
-                            teams[pIndex].catcherDefense += 2;
                         break;
                     }
                 }
@@ -371,24 +294,14 @@ public class CalController_v2 : MonoBehaviour
                     teams[pIndex].sumUnderSungu += 48;
                     teams[pIndex].sumSpeed += 30;
                     teams[pIndex].sumDefence += 30;
-
-                    //포수 수비계산
-                    if (teams[pIndex].hitterPlayers[i].position == HitterPlayerDB.Position.posu)
-                        teams[pIndex].catcherDefense += 30;
                 }
                 else if (teams[pIndex].hitterPlayers[i].grade == "스페셜")
                 {
                     teams[pIndex].SumHitterPlus(10);
-                    //포수 수비계산
-                    if (teams[pIndex].hitterPlayers[i].position == HitterPlayerDB.Position.posu)
-                        teams[pIndex].catcherDefense += 10;
                 }
                 else
                 {
                     teams[pIndex].SumHitterPlus(15);
-                    //포수 수비계산
-                    if (teams[pIndex].hitterPlayers[i].position == HitterPlayerDB.Position.posu)
-                        teams[pIndex].catcherDefense += 15;
                 }
 
                 if (teams[pIndex].hitterPlayers[i].grade != "라이징")
@@ -397,132 +310,109 @@ public class CalController_v2 : MonoBehaviour
                     teams[pIndex].sumLeftHit += plusValue;
                     teams[pIndex].sumRightHit += plusValue;
                     teams[pIndex].sumUnderHit += plusValue;
-                    if (teams[pIndex].hitterPlayers[i].grade != "몬스터")
+                    if (teams[pIndex].hitterPlayers[i].grade == "몬스터")
                     {
                         //임시 레벨적용
                         if (plusValue >= 30)
                         {
                             teams[pIndex].sumAwakeningHitter += 1;
                             teams[pIndex].SumHitterPlus(1);
-
-                            //포수 수비계산
-                            if (teams[pIndex].hitterPlayers[i].position == HitterPlayerDB.Position.posu)
-                                teams[pIndex].catcherDefense += 1;
                         }
-                    }else if (teams[pIndex].hitterPlayers[i].grade != "에이스")
+                    }else if (teams[pIndex].hitterPlayers[i].grade == "에이스")
                     {
                         if (plusValue >= 25)
                         {
                             teams[pIndex].sumAwakeningHitter += 1;
                             teams[pIndex].SumHitterPlus(1);
-
-                            //포수 수비계산
-                            if (teams[pIndex].hitterPlayers[i].position == HitterPlayerDB.Position.posu)
-                                teams[pIndex].catcherDefense += 1;
                         }
                     }
-                    else if (teams[pIndex].hitterPlayers[i].grade != "스페셜")
+                    else if (teams[pIndex].hitterPlayers[i].grade == "스페셜")
                     {
                         if (plusValue >= 15)
                         {
                             //teams[pIndex].sumAwakeningHitter += 1;
                             teams[pIndex].SumHitterPlus(1);
-
-                            //포수 수비계산
-                            if (teams[pIndex].hitterPlayers[i].position == HitterPlayerDB.Position.posu)
-                                teams[pIndex].catcherDefense += 1;
                         }
                     }
-
-
                 }
-
-
                 //추가능력치 계산
                 teams[pIndex].SumHitterPlus(teams[pIndex].hitterPlayers[i].addpoint);
-
-                //포수 수비계산
-                if (teams[pIndex].hitterPlayers[i].position == HitterPlayerDB.Position.posu)
-                    teams[pIndex].catcherDefense += teams[pIndex].hitterPlayers[i].addpoint;
             }
 
-            //투수 만들어야됨
-            for (int i = 0; i < teams[pIndex].pitcherPlayers.Count; i++)
-            {
 
-                teams[pIndex].sumLeftChangeball += teams[pIndex].pitcherPlayers[i].changeball_left * teams[pIndex].pitcherPlayers[i].contribution ;
-                teams[pIndex].sumRightChangeball += teams[pIndex].pitcherPlayers[i].changeball_right * teams[pIndex].pitcherPlayers[i].contribution;
-                teams[pIndex].sumLeftNinth += teams[pIndex].pitcherPlayers[i].ninth_left * teams[pIndex].pitcherPlayers[i].contribution;
-                teams[pIndex].sumRightNinth += teams[pIndex].pitcherPlayers[i].ninth_right * teams[pIndex].pitcherPlayers[i].contribution;
-                teams[pIndex].sumLeftPowerball += teams[pIndex].pitcherPlayers[i].powerball_left * teams[pIndex].pitcherPlayers[i].contribution;
-                teams[pIndex].sumRightPowerball += teams[pIndex].pitcherPlayers[i].powerball_right * teams[pIndex].pitcherPlayers[i].contribution;
-                teams[pIndex].sumMental += teams[pIndex].pitcherPlayers[i].mental * teams[pIndex].pitcherPlayers[i].contribution;
-                teams[pIndex].sumHealth += teams[pIndex].pitcherPlayers[i].health * teams[pIndex].pitcherPlayers[i].contribution;
+            ////////////////////////////////////////////투수
+            //투수 계산
+            PitcherPlayerDB tempPitchers = teams[pIndex].pitcherPlayers.Where((temp) => temp.positionCode.ToString() == pitcherCodeInput[pIndex].text).FirstOrDefault();
+
+            if(tempPitchers != null)
+            {
+                teams[pIndex].sumLeftChangeball += tempPitchers.changeball_left;
+                teams[pIndex].sumRightChangeball += tempPitchers.changeball_right;
+                teams[pIndex].sumLeftNinth += tempPitchers.ninth_left;
+                teams[pIndex].sumRightNinth += tempPitchers.ninth_right;
+                teams[pIndex].sumLeftPowerball += tempPitchers.powerball_left;
+                teams[pIndex].sumRightPowerball += tempPitchers.powerball_right;
+                teams[pIndex].sumMental += tempPitchers.mental;
+                teams[pIndex].sumHealth += tempPitchers.health;
 
                 //등급 더하기
-                if (teams[pIndex].pitcherPlayers[i].grade == "라이징")
+                if (tempPitchers.grade == "라이징")
                 {
-                    teams[pIndex].sumLeftChangeball += 50 * teams[pIndex].pitcherPlayers[i].contribution;
-                    teams[pIndex].sumRightChangeball += 50 * teams[pIndex].pitcherPlayers[i].contribution;
-                    teams[pIndex].sumLeftNinth += 50 * teams[pIndex].pitcherPlayers[i].contribution;
-                    teams[pIndex].sumRightNinth += 50 * teams[pIndex].pitcherPlayers[i].contribution;
-                    teams[pIndex].sumLeftPowerball += 30 * teams[pIndex].pitcherPlayers[i].contribution;
-                    teams[pIndex].sumRightPowerball += 30 * teams[pIndex].pitcherPlayers[i].contribution;
-                    teams[pIndex].sumMental += 15 * teams[pIndex].pitcherPlayers[i].contribution;
-                    teams[pIndex].sumHealth += 30 * teams[pIndex].pitcherPlayers[i].contribution;
+                    teams[pIndex].sumLeftChangeball += 50;
+                    teams[pIndex].sumRightChangeball += 50;
+                    teams[pIndex].sumLeftNinth += 50;
+                    teams[pIndex].sumRightNinth += 50;
+                    teams[pIndex].sumLeftPowerball += 30;
+                    teams[pIndex].sumRightPowerball += 30;
+                    teams[pIndex].sumMental += 15;
+                    teams[pIndex].sumHealth += 30;
                 }
-                else if (teams[pIndex].pitcherPlayers[i].grade == "스페셜")
+                else if (tempPitchers.grade == "스페셜")
                 {
-                    teams[pIndex].SumPitcherPlus(10 * teams[pIndex].pitcherPlayers[i].contribution);
+                    teams[pIndex].SumPitcherPlus(10);
                 }
                 else
                 {
-                    teams[pIndex].SumPitcherPlus(15 * teams[pIndex].pitcherPlayers[i].contribution);
+                    teams[pIndex].SumPitcherPlus(15);
                 }
 
-                if (teams[pIndex].pitcherPlayers[i].grade != "라이징")
+                if (tempPitchers.grade != "라이징")
                 {
-                    int plusValue = teams[pIndex].pitcherPlayers[i].level;
+                    int plusValue = tempPitchers.level;
                     teams[pIndex].sumLeftChangeball += plusValue;
                     teams[pIndex].sumRightChangeball += plusValue;
-                    if (teams[pIndex].pitcherPlayers[i].grade != "몬스터")
+                    if (tempPitchers.grade == "몬스터")
                     {
                         //임시 레벨적용
                         if (plusValue >= 30)
                         {
                             teams[pIndex].sumAwakeningPitcher += 1;
-                            teams[pIndex].SumPitcherPlus(1 * teams[pIndex].pitcherPlayers[i].contribution);
+                            teams[pIndex].SumPitcherPlus(1);
                         }
                     }
-                    else if (teams[pIndex].pitcherPlayers[i].grade != "에이스")
+                    else if (tempPitchers.grade == "에이스")
                     {
                         if (plusValue >= 25)
                         {
                             teams[pIndex].sumAwakeningPitcher += 1;
-                            teams[pIndex].SumPitcherPlus(1 * teams[pIndex].pitcherPlayers[i].contribution);
+                            teams[pIndex].SumPitcherPlus(1);
                         }
                     }
-                    else if (teams[pIndex].pitcherPlayers[i].grade != "스페셜")
+                    else if (tempPitchers.grade == "스페셜")
                     {
                         if (plusValue >= 15)
                         {
                             //teams[pIndex].sumAwakeningHitter += 1;
-                            teams[pIndex].SumPitcherPlus(1 * teams[pIndex].pitcherPlayers[i].contribution);
+                            teams[pIndex].SumPitcherPlus(1);
                         }
                     }
-
-
                 }
-
-
                 //추가능력치 계산
-                teams[pIndex].SumHitterPlus(teams[pIndex].hitterPlayers[i].addpoint);
-                teams[pIndex].SumPitcherPlus(teams[pIndex].pitcherPlayers[i].addpoint * teams[pIndex].pitcherPlayers[i].contribution);
-
+                teams[pIndex].SumHitterPlus(tempPitchers.addpoint);
+                teams[pIndex].SumPitcherPlus(tempPitchers.addpoint);
             }
 
-
-            // 결과
+            // 결과 출력
             teams[pIndex].SettingText();
         }
     }

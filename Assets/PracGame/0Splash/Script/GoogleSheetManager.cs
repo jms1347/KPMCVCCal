@@ -67,7 +67,7 @@ public class GoogleSheetManager : Singleton<GoogleSheetManager>
             player.teamName = row[3];
             player.grade = row[4];
             player.year = row[5] != "" ? int.Parse(row[5]) : 0;
-            player.level = int.Parse(row[6]);
+            player.level = row[6] != "" ? int.Parse(row[6]) : 0;
             player.addPoint = row[7] != "" ? int.Parse(row[7]) : 0;
             player.aPoint_1 = row[8] != "" ? int.Parse(row[8]) : 0;
             player.aPoint_2 = row[9] != "" ? int.Parse(row[9]) : 0;
