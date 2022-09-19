@@ -79,12 +79,38 @@ public class CalController_v2 : MonoBehaviour
             sumDefence += plusValue;
         }
 
+        public void SumHitterDetailPlus(int index, int plusValue)
+        {
+            if(index == 0)
+            {
+                sumLeftHit += plusValue;
+                sumRightHit += plusValue;
+                sumUnderHit += plusValue;
+            }
+            else if(index == 1)
+            {
+                sumLeftLongHit += plusValue;
+                sumRightLongHit += plusValue;
+                sumUnderLongHit += plusValue;
+            }
+            else
+            {
+                sumLeftSungu += plusValue;
+                sumRightSungu += plusValue;
+                sumUnderSungu += plusValue;
+            }
+        }
+
         public void ErrorMessageOutPut(string message)
         {
             dataTexts[12].text = message;
         }
         public void SettingText()
         {
+            for (int i = 0; i < dataTexts.Count; i++)
+            {
+                dataTexts[i].color = Color.black;
+            }
             //타자합
             dataTexts[0].text = sumLeftHit.ToString() + "(평균 : " + sumLeftHit / 9 + ")"; 
             dataTexts[1].text = sumRightHit.ToString() + "(평균 : " + sumRightHit / 9 + ")"; 
@@ -95,12 +121,14 @@ public class CalController_v2 : MonoBehaviour
             dataTexts[6].text = sumLeftSungu.ToString() + "(평균 : " + sumLeftSungu / 9 + ")";
             dataTexts[7].text = sumRightSungu.ToString() + "(평균 : " + sumRightSungu / 9 + ")";
             dataTexts[8].text = sumUnderSungu.ToString() + "(평균 : " + sumUnderSungu / 9 + ")";
-            //dataTexts[9].text = sumSpeed.ToString() + "(평균 : " + sumSpeed / 9 + ")";
-            //dataTexts[10].text = sumDefence.ToString() + "(평균 : " + sumDefence / 9 + ")";
+
             dataTexts[11].text = sumAwakeningHitter.ToString();
             dataTexts[12].text = sumLeftHitterCnt.ToString();
             dataTexts[13].text = sumRightHitterCnt.ToString();
             dataTexts[14].text = sumDoubleHitterCnt.ToString();
+
+            //dataTexts[9].text = sumSpeed.ToString() + "(평균 : " + sumSpeed / 9 + ")";
+            //dataTexts[10].text = sumDefence.ToString() + "(평균 : " + sumDefence / 9 + ")";
             //dataTexts[15].text = catcherDefense.ToString();
 
             //투수합
@@ -113,6 +141,8 @@ public class CalController_v2 : MonoBehaviour
             //dataTexts[24].text = (sumMental / 100).ToString();
             //dataTexts[25].text = (sumHealth / 100).ToString();
             //dataTexts[26].text = sumAwakeningPitcher.ToString();
+
+            CheckAISuggestion();            
         }
 
         public void Init()
@@ -151,15 +181,79 @@ public class CalController_v2 : MonoBehaviour
                //  sumRightPitcherCnt = 0;
                //sumUnderPitcherCnt = 0;
         }
+
+        public void CheckAISuggestion()
+        {
+            string hitEx = "";
+            string longhitEx = "";
+            string sunguEx = "";
+            //타격
+            if (sumLeftHit > sumRightHit)
+            {
+                hitEx = "우완에 타격 약함 : "+ sumRightHit/9 +",_언더 : "+ sumUnderHit/9;
+                dataTexts[1].color = Color.red;
+            }
+            else if (sumRightHit > sumLeftHit)
+            {
+                hitEx = "좌완에 타격 약함 : " + sumLeftHit / 9 + ",_언더 : " + sumUnderHit / 9;
+                dataTexts[0].color = Color.red;
+            }
+            else
+            {
+                hitEx = "좌우완에 타격 동일 : " + sumRightHit / 9 + ",_언더 : " + sumUnderHit / 9;
+                dataTexts[2].color = Color.red;
+            }
+
+            //장타
+            if (sumLeftLongHit > sumRightLongHit)
+            {
+                longhitEx = "우완에 장타 약함 : " + sumRightLongHit / 9 + ",_언더 : " + sumUnderLongHit / 9;
+                dataTexts[4].color = Color.red;
+            }
+            else if (sumRightLongHit > sumLeftLongHit)
+            {
+                longhitEx = "좌완에 장타 약함 : " + sumLeftLongHit / 9 + ",_언더 : " + sumUnderLongHit / 9;
+                dataTexts[3].color = Color.red;
+            }
+            else
+            {
+                longhitEx = "좌우완에 장타 동일 : " + sumLeftLongHit / 9 + ",_언더 : " + sumUnderLongHit / 9;
+                dataTexts[5].color = Color.red;
+            }
+
+            //선구
+            if (sumLeftSungu > sumRightSungu)
+            {
+                sunguEx = "우완에 선구 약함 : " + sumRightSungu / 9 + ",_언더 : " + sumUnderSungu / 9;
+                dataTexts[7].color = Color.red;
+            }
+            else if (sumRightSungu > sumLeftSungu)
+            {
+                sunguEx = "좌완에 선구 약함 : " + sumLeftSungu / 9 + ",_언더 : " + sumUnderSungu / 9;
+                dataTexts[6].color = Color.red;
+            }
+            else
+            {
+                sunguEx = "좌우완에 선구 동일 : " + sumLeftSungu / 9 + ",_언더 : " + sumUnderSungu / 9;
+                dataTexts[8].color = Color.red;
+            }
+
+            dataTexts[24].text = hitEx;
+            dataTexts[25].text = longhitEx;
+            dataTexts[26].text = sunguEx;
+        }
     }
 
     public Team[] teams = new Team[2];
+
 
     public void CalBtn()
     {
         SettingData(redTeamIDInput.text, 0);
         SettingData(blueTeamIDInput.text, 1);
     }
+
+   
     public void SettingData(string pId, int pIndex)
     {
         //초기화
@@ -189,7 +283,9 @@ public class CalController_v2 : MonoBehaviour
                 {
                     tempHitter.level = tempData[i].level;
                     tempHitter.addpoint = tempData[i].addPoint;
-
+                    tempHitter.addpoint_A = tempData[i].addPoint_A;
+                    tempHitter.addpoint_B = tempData[i].addPoint_B;
+                    tempHitter.addpoint_C = tempData[i].addPoint_C;
                     teams[pIndex].hitterPlayers.Add(tempHitter);
                 }
             }
@@ -210,7 +306,7 @@ public class CalController_v2 : MonoBehaviour
                 {
                     tempPitcher.level = tempData[i].level;
                     tempPitcher.addpoint = tempData[i].addPoint;
-                    tempPitcher.positionCode = tempData[i].positionCode;
+
                     teams[pIndex].pitcherPlayers.Add(tempPitcher);
                 }
             }
@@ -337,6 +433,11 @@ public class CalController_v2 : MonoBehaviour
                 }
                 //추가능력치 계산
                 teams[pIndex].SumHitterPlus(teams[pIndex].hitterPlayers[i].addpoint);
+
+                //추가 세부 스텟 계싼
+                teams[pIndex].SumHitterDetailPlus(0, teams[pIndex].hitterPlayers[i].addpoint_A);
+                teams[pIndex].SumHitterDetailPlus(1, teams[pIndex].hitterPlayers[i].addpoint_B);
+                teams[pIndex].SumHitterDetailPlus(2, teams[pIndex].hitterPlayers[i].addpoint_C);
             }
 
 
@@ -408,7 +509,6 @@ public class CalController_v2 : MonoBehaviour
                     }
                 }
                 //추가능력치 계산
-                teams[pIndex].SumHitterPlus(tempPitchers.addpoint);
                 teams[pIndex].SumPitcherPlus(tempPitchers.addpoint);
             }
 

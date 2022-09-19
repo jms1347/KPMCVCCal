@@ -27,6 +27,9 @@ public class HitterPlayerDB
     public int defence;
     public int level = 0;
     public int addpoint = 0;
+    public int addpoint_A = 0;
+    public int addpoint_B = 0;
+    public int addpoint_C = 0;
     public enum Position
     {
         posu = 0,
