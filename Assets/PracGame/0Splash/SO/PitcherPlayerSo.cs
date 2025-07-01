@@ -1,54 +1,66 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-[System.Serializable]
-public class PitcherPlayerDB
+public enum NationType
 {
-    public int index;
+    Green = 0,
+    Blue = 1,
+    Red = 2,
+    Black = 3,
+    Purple = 4
+}
 
-    public string name;
-    public string teamName;
-    public string grade;
-    public int overlol;
-    public int year;
-    public int changeball;
-    public int changeball_right;
-    public int changeball_left;
-    public int ninth;
-    public int ninth_right;
-    public int ninth_left;
-    public int powerball;
-    public int powerball_right;
-    public int powerball_left;
-    public int mental;
-    public int health;
-    public int level = 0;
-    public int addpoint = 0;
-    public int positionCode = 0;
-    public enum Position
+public enum SkillType
+{
+    None,       // 기본값, 스킬 없음
+    Airborne,   // 에어본
+    Knockdown,  // 넉다운
+    Repel       // 격퇴
+}
+public enum SkillCategory
+{
+    No,         // 노 (분노 스킬)
+    Bo,         // 보 (평타 연계 스킬)
+    Chu,        // 추 (다른 장수 연계기 이어받는 스킬)
+    Chu2        // 추2 (추 이후 연계기 넘겨주는 스킬)
+}
+
+public class Character
+{
+    public string Name;
+    public NationType nation;
+    // 노 스킬 정보
+    public SkillType NoSkillType;
+
+    // 보 스킬 정보
+    public SkillType BoSkillType;
+
+    // 추 스킬 정보 (다른 장수의 연계기를 이어받아 발동하는 스킬)
+    // 이 추 스킬이 발동하기 위한 선행 스킬 타입
+    public SkillType ChuConnectableSkillType;
+
+    // 추2 스킬 정보 (추 후에 추2로 넘겨주는 연계기 스킬)
+    // '추' 스킬이 발동한 후 이 '추2' 스킬이 어떤 스킬 타입을 출력하는지
+    // (기존 ChuOutputSkillType의 역할 + 연계 가능한 스킬 타입까지)
+    public SkillType Chu2OutputSkillType;
+
+    // 캐릭터 생성자 (선택 사항이지만 초기화에 용이합니다)
+    public Character(string pName)
     {
-        first = 0,
-        middle = 1,
-        final =2
+        Name = pName;
     }
-    public Position position;
-    public enum Hand
+
+    // 예시: 캐릭터 정보 출력 (디버깅용)
+    public void PrintCharacterInfo()
     {
-        leftHand = 0,
-        rightHand = 1,
-        leftSideHand = 2,
-        rightSideHand = 3
-    }
-    public Hand hand;
-    public enum PreferredBattingOrder
-    {
-        top = 0,
-        cleanup = 1,
-        down = 2,
-        balance = 3
+        Debug.Log($"캐릭터 이름: {Name}");
+        Debug.Log($"노 스킬: {NoSkillType}");
+        Debug.Log($"보 스킬: {BoSkillType}");
+        Debug.Log($"추 스킬 연계 가능: {ChuConnectableSkillType}");
+        Debug.Log($"추2 스킬 출력: {Chu2OutputSkillType}");
     }
 }
+
 
 [CreateAssetMenu(fileName = "PitcherPlayerSO", menuName = "ScriptableObject/PitcherPlayerSO")]
 public class PitcherPlayerSo : ScriptableObject

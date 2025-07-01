@@ -30,7 +30,7 @@ public class AP_DemoDeathTimer : MonoBehaviour {
 		didDeath = false;
 		if ( myRigidbody ) {
 			myRigidbody.isKinematic = false;
-			myRigidbody.velocity = Vector3.zero;
+			myRigidbody.linearVelocity = Vector3.zero;
 			myRigidbody.angularVelocity = Vector3.zero;
 		}
 		// set begining state to hide blast and show object

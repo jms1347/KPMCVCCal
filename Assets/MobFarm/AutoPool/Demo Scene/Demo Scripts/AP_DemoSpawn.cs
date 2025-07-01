@@ -36,8 +36,8 @@ public class AP_DemoSpawn : MonoBehaviour {
 			Rigidbody rb = null;
 			if ( obj ) { rb = obj.GetComponent<Rigidbody>(); }
 			if ( rb ) {
-				Vector3 myVelocity = myRigidbody ? myRigidbody.velocity : Vector3.zero;
-				rb.velocity = myVelocity + ( obj.transform.forward * spawnVelocity );
+				Vector3 myVelocity = myRigidbody ? myRigidbody.linearVelocity : Vector3.zero;
+				rb.linearVelocity = myVelocity + ( obj.transform.forward * spawnVelocity );
 			}
 
 			nextSpawn = Time.time + spawnInterval;
