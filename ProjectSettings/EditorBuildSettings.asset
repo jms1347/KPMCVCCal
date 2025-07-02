@@ -12,10 +12,8 @@ EditorBuildSettings:
     path: Assets/PracGame/1Loading/LoadingScene.unity
     guid: 2416457b5441c8c4784be6775788b011
   - enabled: 1
-    path: Assets/PracGame/2Main/MainScene.unity
-    guid: 6a2701f9ee64b9346b751a2bf0457491
-  - enabled: 1
-    path: Assets/PracGame/2Main/MainScene_v2.unity
-    guid: ae3b11ecb0af18f47ad0ddad7c6633e7
+    path: Assets/PracGame/2Main/MainScene_busy.unity
+    guid: 62cfd581308e4b94a810cac9aa523abd
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 73047381a300fc940ba63b231b182eee, type: 2}
+  m_UseUCBPForAssetBundles: 0

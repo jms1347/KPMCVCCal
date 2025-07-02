@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 public enum NationType
 {
@@ -15,7 +16,18 @@ public enum SkillType
     None,       // 기본값, 스킬 없음
     Airborne,   // 에어본
     Knockdown,  // 넉다운
-    Repel       // 격퇴
+    Repel,       // 격퇴
+    All,        //모든 스킬 대응 가능
+    Counterattack,  //반격
+    Love,    //매혹
+    Flame,         //자염
+    Fire,     //연소
+    CC,             //광역CC
+    Summon,         //소환
+    Enhance,        //강화
+    Heal,       //회복
+    Ugil, //변신(우길)
+    Invincible      //무적
 }
 public enum SkillCategory
 {
@@ -25,8 +37,10 @@ public enum SkillCategory
     Chu2        // 추2 (추 이후 연계기 넘겨주는 스킬)
 }
 
+[System.Serializable]
 public class Character
 {
+    public int code;
     public string Name;
     public NationType nation;
     // 노 스킬 정보
@@ -43,6 +57,8 @@ public class Character
     // '추' 스킬이 발동한 후 이 '추2' 스킬이 어떤 스킬 타입을 출력하는지
     // (기존 ChuOutputSkillType의 역할 + 연계 가능한 스킬 타입까지)
     public SkillType Chu2OutputSkillType;
+
+    public string passiveSkill;
 
     // 캐릭터 생성자 (선택 사항이지만 초기화에 용이합니다)
     public Character(string pName)
@@ -68,5 +84,10 @@ public class Character
 public class CharacterSo : ScriptableObject
 {
     public List<Character> characterDataList = new List<Character>();
+
+    public Character GetCharacterByName(string pName)
+    {
+        return characterDataList.Where(temp => temp.Name.Equals(pName)).FirstOrDefault();
+    }
 
 }

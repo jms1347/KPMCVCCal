@@ -24,12 +24,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3034103495671089719}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 25.623268, y: 0.50000006, z: -0.000045597553}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3034103495671089716
 MonoBehaviour:
@@ -43,6 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 353e38b01b8ed5a42a69b9060e9ec5ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitterPlayerSo: {fileID: 11400000, guid: 22d965e5002081940a0ff8be16fe7bd6, type: 2}
-  pitcherPlayerSo: {fileID: 11400000, guid: de8f908fd6172c74d88874330ff2b028, type: 2}
-  clanTeamPlayerSo: {fileID: 11400000, guid: d888008f147d1da48b1cd6c1787b3dc0, type: 2}
+  characterSo: {fileID: 11400000, guid: d26d49e9995158742aa0e346417ca142, type: 2}
